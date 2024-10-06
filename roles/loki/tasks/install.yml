@@ -16,7 +16,7 @@
 - name: Copy loki config file
   ansible.builtin.template:
           src: loki-local-config.yaml.j2
-          dest: "{{ loki_config_file}}"
+          dest: "{{ loki_config_file }}"
           owner: "{{ loki_user }}"
           group: "{{ loki_group }}"
           mode: 0644
