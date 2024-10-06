@@ -1,0 +1,10 @@
+---
+- name: Smoketest
+  ansible.builtin.uri:
+          url: http://localhost:8080
+          return_content: true
+          status_code: 200
+
+- name: Restart_systemd
+  ansible.builtin.systemd:
+          daemon_reload: true

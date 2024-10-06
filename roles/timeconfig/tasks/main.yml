@@ -1,0 +1,4 @@
+---
+- name: Set Bulgarian time
+  community.general.timezone:
+          name: Europe/Sofia

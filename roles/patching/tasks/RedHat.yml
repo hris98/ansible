@@ -1,0 +1,37 @@
+---
+- name: Update packages RHEL
+  ansible.builtin.dnf:
+          name: "*"
+          state: latest
+          update_only: yes
+  register: update_check
+
+- name: Get update list RHEL
+  ansible.builtin.shell: 
+   cmd: |
+           rpm -qa --last | grep "$(date +%a\ %d\ %b\ %Y)" | awk '{print "upgrade: " $1}'
+  register: result
+  when: update_check.changed == true
+
+
+- name: Check for reboot
+  ansible.builtin.shell: 
+             cmd: needs-restarting -r
+  register: restart_result
+  changed_when: restart_result.rc == 1
+  failed_when:  restart_result.rc > 1
+  check_mode: no
+
+- name: Reboot server if neccesary
+  ansible.builtin.reboot:
+  when: restart_result.rc == 1
+
+- name: Debug result update
+  ansible.builtin.debug:
+          var: update_check
+          verbosity: 1        
+   
+- name: Debug result
+  ansible.builtin.debug:
+          var: result
+          verbosity: 1

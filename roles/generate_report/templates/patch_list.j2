@@ -1,0 +1,46 @@
+<html>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<body>
+
+<h1>System Updates</h2>
+
+<table style="width:100%">
+  <tr>
+    <td>Host Name</td>
+    <td>Distribution</td>
+    <td>Distribution Version</td>
+    <td>Updates Performed</td>
+  </tr>
+{% for host in ansible_play_hosts %}
+  <tr>
+    <td>{{ hostvars[host].ansible_hostname }}</td>
+    <td>{{ hostvars[host].ansible_distribution }}</td>
+    <td>{{ hostvars[host].ansible_distribution_version }}</td>
+    <td>
+    <ul>
+{% if hostvars[host].result.changed == false %}
+ <li> system is complient </li>
+  
+{% else %}
+
+  
+{% for update in hostvars[host].result.stdout_lines %}
+  <li> {{ update }} </li>
+
+{% endfor %}
+
+{% endif %}
+
+</ul>
+    </td>
+  </tr>
+{% endfor %}
+</table>
+
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+---
+- name: Install and Configure Nginx Debian
+  block:
+   - name: Install Ngix
+     ansible.builtin.apt:
+          name: nginx
+          state: present
+          update_cache: true
+
+   - name: Start Nginx service
+     ansible.builtin.systemd:
+          name: nginx.service
+          state: started
+          enabled: true
+
+   - name: Remove default page 
+     ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+   - name: Add page for system updates (loadbalanced)
+     ansible.builtin.template:
+          src: servers_compliance.j2
+          dest: /etc/nginx/sites-enabled/servers_compliance
+          owner: root
+          group: root
+          mode: 644
+     notify: Nginx Restart        

@@ -1,0 +1,8 @@
+---
+- name: Copy over index.html
+  ansible.builtin.template:
+      src: patch_list.j2
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 644

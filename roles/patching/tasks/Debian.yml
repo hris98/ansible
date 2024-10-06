@@ -1,0 +1,42 @@
+---
+- name: Add repo
+  ansible.builtin.apt_repository:
+          repo: "deb http://archive.ubuntu.com/ubuntu {{ item }} main"
+          state: present
+          filename: default.deb          
+  loop:
+       - focal
+       - focal-updates
+       - focal-security
+  when: ansible_distribution == "Ubuntu"
+
+- name: Update packages Deb
+  ansible.builtin.apt:
+     name: "*"
+     state: latest
+     update_cache: yes
+  register: update_check
+
+- name: Get update list Deb
+  ansible.builtin.shell:
+          cmd:  grep -E "^$(date +%Y-%m-%d).+ (install|upgrade) " /var/log/dpkg.log |cut -d " " -f 3-5
+  register: result
+  when: update_check.changed == true
+
+- name: Check for reboot
+  ansible.builtin.find: 
+                paths: /var/run
+                file_type: file
+                patterns: "*reboot-required*"
+  register: restart_result
+
+- name: Reboot server if neccesary 
+  ansible.builtin.reboot:
+  when: restart_result.matched > 0
+
+  #- name: Debug result
+  #ansible.builtin.debug:
+  #      var: ansible_facts
+
+
+

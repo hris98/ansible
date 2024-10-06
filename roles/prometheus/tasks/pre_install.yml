@@ -1,0 +1,28 @@
+---
+- name: Create prometheus group
+  ansible.builtin.group:
+          name: "{{ prometheus_group }}"
+          state: present
+
+- name: Create prometheus user
+  ansible.builtin.user:
+          name: "{{ prometheus_user }}"
+          group: "{{ prometheus_group }}"
+          state: present
+          shell: /usr/sbin/nologin
+
+- name: Create prometheus config folder
+  ansible.builtin.file:
+          path: "{{ prometheus_config_location }}"
+          state: directory
+          mode: 0554
+          owner: "{{ prometheus_user }}"
+          group: "{{ prometheus_group }}"
+
+- name: Create prometheus data folder
+  ansible.builtin.file:
+          path: "{{ prometheus_data_location }}"
+          state: directory
+          mode: 0774
+          owner: "{{ prometheus_user }}"
+          group: "{{ prometheus_group }}"

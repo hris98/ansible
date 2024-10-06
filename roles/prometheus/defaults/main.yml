@@ -1,0 +1,6 @@
+prometheus_group: prometheus
+prometheus_user: prometheus
+prometheus_config_location: /etc/prometheus
+prometheus_data_location: /var/lib/data
+prometheus_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+prometheus_version: 2.54.0

@@ -1,0 +1,16 @@
+[Unit]
+Description=Promtail for Loki
+After=network.target
+
+[Service]
+Type=simple
+
+User=loki
+
+ExecStart=/usr/local/bin/loki-linux-amd64 -config.expand-env=true -config.file /etc/loki/loki-local-config.yaml
+Restart=on-abort
+
+
+
+[Install]
+WantedBy=multi-user.target

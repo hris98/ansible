@@ -1,0 +1,6 @@
+{% for host in ansible_play_hosts %}
+
+{{ hostvars[host].result }}
+{{ hostvars[host].ansible_hostname }}
+
+{% endfor %}

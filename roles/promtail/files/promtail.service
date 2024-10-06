@@ -1,0 +1,17 @@
+[Unit]
+Description=Promtail for Loki
+After=network.target
+
+[Service]
+Type=simple
+
+User=promtail
+
+ExecStart=/usr/local/bin/promtail-linux-amd64 -config.expand-env=true -config.file /etc/promtail/promtail.yaml
+
+Restart=on-abort
+
+
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+---
+- name: Debug hostvars
+  ansible.builtin.debug:
+          msg: "Web servers are: {{ groups['web-servers'] }}"
+
+- name: Debug the var now
+  ansible.builtin.debug:
+          msg: "{{ hostvars[item].ansible_default_ipv4 }}"
+  loop: "{{ groups['web-servers'] }}"

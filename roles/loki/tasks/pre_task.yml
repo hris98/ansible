@@ -1,0 +1,34 @@
+---
+- name: Create loki group
+  ansible.builtin.group:
+          name: loki
+          state: present
+          system: true
+
+- name: Create loki user
+  ansible.builtin.user:
+          name: loki
+          group: loki
+          system: true
+          state: present
+          create_home: no
+          shell: /usr/sbin/nologin
+
+- name: Create loki config folder
+  ansible.builtin.file:
+          name: /etc/loki
+          owner: loki
+          group: loki
+          mode: 0755
+          state: directory
+
+ 
+- name: Create loki data folder
+  ansible.builtin.file:
+          name: /data/loki
+          owner: loki
+          group: loki
+          mode: 0755
+          state: directory
+
+

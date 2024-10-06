@@ -1,0 +1,16 @@
+- name: Add host scrape file to prom srv
+  ansible.builtin.copy:
+          content: |
+             [
+               {
+                      "targets": [ "{{hostvars[item]['ansible_default_ipv4']['address']}}:8080" ],
+                      "labels": {
+                         "job": "node",
+                         "env": "prod"
+                       }
+               }
+              ]
+          dest: "/etc/prometheus/{{item}}.json"
+  delegate_to: "{{prometheus_node}}"
+  run_once: true
+  loop: "{{ play_hosts }}"

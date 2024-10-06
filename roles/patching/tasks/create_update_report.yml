@@ -1,0 +1,16 @@
+---
+#- name: Generate update report
+#  ansible.builtin.template:
+#          src: patch_list.j2
+#          dest: /tmp/update.html
+#  delegate_to: 127.0.0.1
+
+
+
+- name: Copy over index.html
+  ansible.builtin.template:
+      src: patch_list.j2
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 644

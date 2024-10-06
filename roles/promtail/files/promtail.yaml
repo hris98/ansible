@@ -1,0 +1,48 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://localhost:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: system
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: secure
+      host: infra-srv1
+      __path__: /var/log/secure
+  
+  - targets:
+      - localhost
+    labels:
+      job: audit
+      host: infra-srv1
+      __path__: /var/log/audit/audit.log
+        
+  - targets:
+      - localhost
+    labels:
+      job: dnf
+      host: infra-srv1
+      __path__: /var/log/dnf.log
+        
+  - targets:
+      - localhost
+    labels:
+      job: prometheus
+      host: infra-srv1
+      __path__: /var/log/prometheus.log
+  
+  - targets:
+      - localhost
+    labels:
+      job: grafana
+      host: infra-srv1
+      __path__: /var/log/grafana/grafana.log
+        
