@@ -1,14 +1,14 @@
 ---
 - name: Create loki group
   ansible.builtin.group:
-          name: loki
+          name: "{{ loki_group }}"
           state: present
           system: true
 
 - name: Create loki user
   ansible.builtin.user:
-          name: loki
-          group: loki
+          name: "{{loki_user }}"
+          group: "{{ loki_group }}"
           system: true
           state: present
           create_home: no
@@ -16,7 +16,7 @@
 
 - name: Create loki config folder
   ansible.builtin.file:
-          name: /etc/loki
+          name: "{{ loki_config_folder }}"
           owner: loki
           group: loki
           mode: 0755
@@ -25,7 +25,7 @@
  
 - name: Create loki data folder
   ansible.builtin.file:
-          name: /data/loki
+          name: "{{ loki_data_folder }}"
           owner: loki
           group: loki
           mode: 0755

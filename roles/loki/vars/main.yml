@@ -1,2 +1,8 @@
 ---
-# vars file for roles/loki
+loki_user: loki
+loki_group: loki
+loki_data_folder: /data/loki
+loki_config_folder: /etc/loki
+loki_url: https://github.com/grafana/loki/releases/download/{{ loki_version }}/loki-linux-amd64.zip
+loki_version: 3.2.0
+loki-config_file: "{{ loki_config_folder }}/loki-local-config.yaml"

@@ -1,7 +1,7 @@
 ---
 - name: Download loki zip file
   ansible.builtin.get_url:
-          url: https://github.com/grafana/loki/releases/download/v3.2.0/loki-linux-amd64.zip
+          url: "{{ loki_url }}"
           dest: /tmp/loki-linux-amd64.zip
 
 - name: Unarchive loki zip file
@@ -9,16 +9,16 @@
           src: /tmp/loki-linux-amd64.zip
           dest: /usr/local/bin
           remote_src: true
-          owner: loki
-          group: loki
+          owner: "{{ loki_user }}"
+          group: "{{ loki_group }}"
           mode: 0554
 
 - name: Copy loki config file
   ansible.builtin.template:
           src: loki-local-config.yaml.j2
-          dest: /etc/loki/loki-local-config.yaml
-          owner: loki
-          group: loki
+          dest: "{{ loki_config_file}}"
+          owner: "{{ loki_user }}"
+          group: "{{ loki_group }}"
           mode: 0644
 
 - name: copy loki unit file

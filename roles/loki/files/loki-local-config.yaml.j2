@@ -7,11 +7,11 @@ server:
 
 common:
   instance_addr: 127.0.0.1
-  path_prefix: "{{ loki_data_folder }}"
+  path_prefix: "{{ loki_data_folder}}"
   storage:
     filesystem:
-      chunks_directory: "{{ loki_data_folder }}/chunks"
-      rules_directory: "{{ loki_data_folder }}/rules
+      chunks_directory: "{{ lok_data_folder }}/chunks"
+      rules_directory: "{{  loki_data_folder }}/rules"
   replication_factor: 1
   ring:
     kvstore:
