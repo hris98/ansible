@@ -28,9 +28,11 @@
           owner: root
           group: root
           mode: 0644
+  notify: Reload systemd
 
 - name: Start loki service
   ansible.builtin.systemd:
           name: loki.service
           state: started
-          daemon_reload: true
+          enabled: true
+
