@@ -13,23 +13,23 @@
           owner: "{{ promtail_user }}"
           group: "{{ promtail_group }}"
 
-- name: copy config file for promtail
-  ansible.builtin.copy:
-          src: ./files/promtail.yaml
+- name: set config file for promtail
+  ansible.builtin.template:
+          src: promtail.yml.j2
           dest: "{{ promtail_config_folder }}/promtail.yaml"
           owner:  "{{ promtail_user }}"
           group:  "{{ promtail_group }}"
           mode: 0544
 
-- name: copy log rotate config
-  ansible.builtin.copy:
-          src: ./files/promtail_acl
+- name: Set log rotate config
+  ansible.builtin.template:
+          src: promtail_acl.j2
           dest:  /etc/logrotate.d/promtail_acl
           owner: root
           group: root
           mode: 0544 
 
-- name: set log acls
+- name: Set log acls for rhel
   ansible.builtin.shell: |
         /usr/bin/setfacl -R -m d:u:promtail:rx /var/log
         /usr/bin/setfacl -m u:promtail:rx /var/log
@@ -38,10 +38,21 @@
         /usr/bin/setfacl -R -m d:u:promtail:rx /var/log/audit
         /usr/bin/setfacl -m u:promtail:rx /var/log/audit
         /usr/bin/setfacl -m u:promtail:r /var/log/audit/audit.log
+  when: ansible_os_family == "RedHat"
 
-- name: Copy the promtail unit file
-  ansible.builtin.copy:
-          src: ./files/promtail.service
+- name: Set log acls for debian
+  ansible.builtin.shell: |
+        /usr/bin/setfacl -R -m d:u:promtail:rx /var/log
+        /usr/bin/setfacl -m u:promtail:rx /var/log
+        /usr/bin/setfacl -m u:promtail:r /var/log/secure
+        /usr/bin/setfacl -m u:promtail:r /var/log/dnf.log
+        /usr/bin/setfacl -m u:promtail:r /var/log/auth.log
+  when: ansible_os_family == "Debian"     
+
+
+- name: Set the promtail unit file
+  ansible.builtin.template:
+          src: promtail.service.j2
           dest: /etc/systemd/system/promtail.service
           owner: root
           group: root

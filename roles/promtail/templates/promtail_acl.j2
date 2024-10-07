@@ -1,0 +1,17 @@
+/var/log/dummy_promtail_acl/dummy_promtail_acl.log
+{
+    copytruncate
+    postrotate
+        /usr/bin/setfacl -R -m d:u:promtail:rx /var/log
+        /usr/bin/setfacl -m u:promtail:rx /var/log
+        /usr/bin/setfacl -m u:promtail:r /var/log/secure
+        /usr/bin/setfacl -m u:promtail:r /var/log/dnf.log
+        {% if ansible_os_family == "Debian" %}
+        /usr/bin/setfacl -m u:promtail:rx /var/log/auth.log
+        {% elif ansible_os_family == "RedHat" %}
+        /usr/bin/setfacl -R -m d:u:promtail:rx /var/log/audit
+        /usr/bin/setfacl -m u:promtail:rx /var/log/audit
+        /usr/bin/setfacl -m u:promtail:r /var/log/audit/audit.log
+        {% endif %}    
+endscript
+}

@@ -1,0 +1,46 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://localhost:3100/loki/api/v1/push
+
+scrape_configs:
+- job_name: system
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: secure
+      host: {{ ansible_hostname }}
+      __path__: /var/log/secure
+ 
+ {% if ansible_os_family == "RedHat" %}
+ 
+  - targets:
+      - localhost
+    labels:
+      job: audit
+      host: {{ ansible_hostname }}
+      __path__: /var/log/audit/audit.log
+ 
+ {% elif ansible_os_family == "Debian" %}
+  - targets:
+      - localhost
+    labels:
+      job: auth
+      host: {{ ansible_hostname }}
+      __path__: /var/log/auth/auth.log
+
+ {% endif %}
+
+  - targets:
+      - localhost
+    labels:
+      job: dnf
+      host: {{ ansible_hostname }}
+      __path__: /var/log/dnf.log
+        
