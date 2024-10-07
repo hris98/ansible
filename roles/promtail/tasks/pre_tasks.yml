@@ -1,14 +1,14 @@
 ---
 - name: Create promtail group
   ansible.builtin.group:
-          name: promtail
+          name: "{{ promtail_group}}"
           state: present
           system: true
 
 - name: Create promtail user
   ansible.builtin.user:
-          name: promtail
-          group: promtail
+          name: "{{ promtail_user }}"
+          group: "{{ promtail_group }}"
           state: present
           system: true
           shell: /usr/sbin/nologin
@@ -16,19 +16,29 @@
 
 - name: Create promtail config folder
   ansible.builtin.file:
-          path: /etc/promtail
+          path: "{{ promtail_config_folder }}"
           state: directory
           mode: 0755
-          owner: promtail
-          group: promtail
+          owner:  "{{ promtail_user }}" 
+          group:  "{{ promtail_group }}" 
 
 - name: Create promtail positions file
   ansible.builtin.file:
-          path: /tmp/positions.yaml  
+          path: "{{ promtail_positions_file_location }}"  
           state: touch
           mode: 0600
           owner: promtail
           group: promtail
 
 
+- name: Install unzip deb based
+  ansible.builtin.apt:
+          name: unzip
+          state: latest
+  when:  ansible_os_family == "Debian"
 
+- name: Install unzip rhel 
+  ansible.builtin.dnf:
+          name: unzip
+          state: latest
+  when: ansible_os_family == "RedHat"

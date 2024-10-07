@@ -1,2 +1,9 @@
 ---
-# vars file for roles/promtail
+promtail_group: promtail
+promtail_user: promtail
+promtail_config_folder: /etc/promtail
+promtail_positions_file: positions.yaml
+promtail_positions_file_location: "/tmp/{{ promtail_positions_file }}"
+promtail_url: "https://github.com/grafana/loki/releases/download/v{{ promtail_version }}/promtail-linux-amd64.zip"
+promtail_version: 3.2.0
+

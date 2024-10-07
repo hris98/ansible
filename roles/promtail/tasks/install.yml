@@ -1,7 +1,7 @@
 ---
 - name: download promtail
   ansible.builtin.get_url:
-          url: https://github.com/grafana/loki/releases/download/v3.2.0/promtail-linux-amd64.zip
+          url: "{{ promtail_url }}"
           dest: /tmp/promtail-linux-amd64.zip
 
 - name: unarchive promtail zip
@@ -10,15 +10,15 @@
           remote_src: true
           dest: /usr/local/bin
           mode: 0554
-          owner: promtail
-          group: promtail
+          owner: "{{ promtail_user }}"
+          group: "{{ promtail_group }}"
 
 - name: copy config file for promtail
   ansible.builtin.copy:
           src: ./files/promtail.yaml
-          dest: /etc/promtail/promtail.yaml
-          owner: promtail
-          group: promtail
+          dest: "{{ promtail_config_folder }}/promtail.yaml"
+          owner:  "{{ promtail_user }}"
+          group:  "{{ promtail_group }}"
           mode: 0544
 
 - name: copy log rotate config
@@ -33,11 +33,11 @@
   ansible.builtin.shell: |
         /usr/bin/setfacl -R -m d:u:promtail:rx /var/log
         /usr/bin/setfacl -m u:promtail:rx /var/log
+        /usr/bin/setfacl -m u:promtail:r /var/log/secure
+        /usr/bin/setfacl -m u:promtail:r /var/log/dnf.log
         /usr/bin/setfacl -R -m d:u:promtail:rx /var/log/audit
         /usr/bin/setfacl -m u:promtail:rx /var/log/audit
-        /usr/bin/setfacl -m u:promtail:r /var/log/secure
         /usr/bin/setfacl -m u:promtail:r /var/log/audit/audit.log
-        /usr/bin/setfacl -m u:promtail:r /var/log/dnf.log
 
 - name: Copy the promtail unit file
   ansible.builtin.copy:
@@ -46,10 +46,10 @@
           owner: root
           group: root
           mode: 0544
+  notify: Restart systemd
 
 - name: Start promtail service
   ansible.builtin.systemd:
-          daemon_reload: true
           name: promtail.service
           state: started
           enabled: true
