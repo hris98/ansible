@@ -28,6 +28,7 @@ scrape_configs:
       __path__: /var/log/audit/audit.log
  
  {% elif ansible_os_family == "Debian" %}
+
   - targets:
       - localhost
     labels:

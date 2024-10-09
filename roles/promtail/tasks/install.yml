@@ -64,3 +64,4 @@
           name: promtail.service
           state: started
           enabled: true
+
