@@ -30,6 +30,13 @@
           owner: promtail
           group: promtail
 
+- name: Create a dummy file for acl rotation
+  ansible.builtin.file:
+          path: /var/log/dummy_promtail_acl
+          state: touch
+          mode: 0644
+          owner: root
+          group: root
 
 - name: Install unzip deb based
   ansible.builtin.apt:
@@ -40,5 +47,17 @@
 - name: Install unzip rhel 
   ansible.builtin.dnf:
           name: unzip
+          state: latest
+  when: ansible_os_family == "RedHat"
+
+- name: Install unzip deb based
+  ansible.builtin.apt:
+          name: acl
+          state: latest
+  when:  ansible_os_family == "Debian"
+
+- name: Install unzip rhel 
+  ansible.builtin.dnf:
+          name: acl
           state: latest
   when: ansible_os_family == "RedHat"
